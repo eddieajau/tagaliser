@@ -9,6 +9,7 @@
 namespace Tagaliser;
 
 use Joomla\Application\AbstractCliApplication;
+use Joomla\DI\Container;
 
 /**
  * The Tagaliser application class.
@@ -23,7 +24,15 @@ class Application extends AbstractCliApplication
 	 * @var    string
 	 * @since  1.0
 	 */
-	const VERSION = '1.0';
+	const VERSION = '1.1';
+
+	/**
+	 * The application's DI container.
+	 *
+	 * @var    Di\Container
+	 * @since  1.1
+	 */
+	private $container;
 
 	/**
 	 * Execute the application.
@@ -42,7 +51,35 @@ class Application extends AbstractCliApplication
 			return;
 		}
 
-		$this->out('It works!');
+		/* @var $github \Joomla\Github\Github */
+		$github  = $this->container->get('github');
+
+		$this->out('Repositories:');
+
+		foreach ($github->repositories->getListOrg('joomla') as $repository)
+		{
+			$this->out('* ' . $repository->name);
+		}
+	}
+
+	/**
+	 * Custom initialisation method.
+	 *
+	 * Called at the end of the Base::__construct method. This is for developers to inject initialisation code for their application classes.
+	 *
+	 * @return  void
+	 *
+	 * @codeCoverageIgnore
+	 * @since   1.0
+	 */
+	protected function initialise()
+	{
+		// New DI stuff!
+		$container = new Container;
+
+		$container->registerServiceProvider(new Providers\GithubServiceProvider);
+
+		$this->container = $container;
 	}
 
 	/**

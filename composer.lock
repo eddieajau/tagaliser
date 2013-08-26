@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "0d03abd35c1fcde32aff1a96ab447499",
+    "hash": "c8900deb65c653fdfaaaabdd65ae6650",
     "packages": [
         {
             "name": "joomla/application",
@@ -166,6 +166,46 @@
             "time": "2013-06-04 04:05:30"
         },
         {
+            "name": "joomla/di",
+            "version": "1.0-beta2",
+            "target-dir": "Joomla/DI",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/joomla/joomla-framework-di.git",
+                "reference": "3716be42406e69e62e4842c60fa2c3c32d99233b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/joomla/joomla-framework-di/zipball/3716be42406e69e62e4842c60fa2c3c32d99233b",
+                "reference": "3716be42406e69e62e4842c60fa2c3c32d99233b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.10"
+            },
+            "type": "joomla-package",
+            "autoload": {
+                "psr-0": {
+                    "Joomla\\DI": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "description": "Joomla DI Package",
+            "homepage": "https://github.com/joomla/joomla-framework-di",
+            "keywords": [
+                "container",
+                "dependency injection",
+                "di",
+                "framework",
+                "ioc",
+                "joomla"
+            ],
+            "time": "2013-08-15 23:31:20"
+        },
+        {
             "name": "joomla/filesystem",
             "version": "1.0-beta2",
             "target-dir": "Joomla/Filesystem",
@@ -244,6 +284,86 @@
             "keywords": [
                 "filter",
                 "framework",
+                "joomla"
+            ],
+            "time": "2013-08-16 02:58:11"
+        },
+        {
+            "name": "joomla/github",
+            "version": "1.0-beta2",
+            "target-dir": "Joomla/Github",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/joomla/joomla-framework-github.git",
+                "reference": "887d1bb5849084757b4908cad2517b260a6dbe4f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/joomla/joomla-framework-github/zipball/887d1bb5849084757b4908cad2517b260a6dbe4f",
+                "reference": "887d1bb5849084757b4908cad2517b260a6dbe4f",
+                "shasum": ""
+            },
+            "require": {
+                "joomla/date": "1.0-beta2",
+                "joomla/http": "1.0-beta2",
+                "joomla/registry": "1.0-beta2",
+                "joomla/uri": "1.0-beta2",
+                "php": ">=5.3.10"
+            },
+            "type": "joomla-package",
+            "autoload": {
+                "psr-0": {
+                    "Joomla\\Github": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "description": "Joomla Github Package",
+            "homepage": "https://github.com/joomla/joomla-framework-github",
+            "keywords": [
+                "framework",
+                "github",
+                "joomla"
+            ],
+            "time": "2013-08-16 02:58:11"
+        },
+        {
+            "name": "joomla/http",
+            "version": "1.0-beta2",
+            "target-dir": "Joomla/Http",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/joomla/joomla-framework-http.git",
+                "reference": "8c6102463f8b48bca0a7f2f67cc3ac50973caf48"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/joomla/joomla-framework-http/zipball/8c6102463f8b48bca0a7f2f67cc3ac50973caf48",
+                "reference": "8c6102463f8b48bca0a7f2f67cc3ac50973caf48",
+                "shasum": ""
+            },
+            "require": {
+                "joomla/registry": "1.0-beta2",
+                "joomla/uri": "1.0-beta2",
+                "php": ">=5.3.10"
+            },
+            "type": "joomla-package",
+            "autoload": {
+                "psr-0": {
+                    "Joomla\\Http": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "description": "Joomla HTTP Package",
+            "homepage": "https://github.com/joomla/joomla-framework-http",
+            "keywords": [
+                "framework",
+                "http",
                 "joomla"
             ],
             "time": "2013-08-16 02:58:11"
@@ -574,7 +694,9 @@
     ],
     "minimum-stability": "beta",
     "stability-flags": {
-        "joomla/application": 10
+        "joomla/application": 10,
+        "joomla/di": 10,
+        "joomla/github": 10
     },
     "platform": [
 
