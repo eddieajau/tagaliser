@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "c8900deb65c653fdfaaaabdd65ae6650",
+    "hash": "6e9df0a45ef61e5af680252dd1386b98",
     "packages": [
         {
             "name": "joomla/application",
@@ -127,6 +127,47 @@
                 "joomla"
             ],
             "time": "2013-05-15 03:30:25"
+        },
+        {
+            "name": "joomla/database",
+            "version": "1.0-beta2",
+            "target-dir": "Joomla/Database",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/joomla/joomla-framework-database.git",
+                "reference": "7661d04c14f41279f01a35464cf97b3ccdfc1b59"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/joomla/joomla-framework-database/zipball/7661d04c14f41279f01a35464cf97b3ccdfc1b59",
+                "reference": "7661d04c14f41279f01a35464cf97b3ccdfc1b59",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.10",
+                "psr/log": "~1.0"
+            },
+            "require-dev": {
+                "joomla/test": "1.0-beta2"
+            },
+            "type": "joomla-package",
+            "autoload": {
+                "psr-0": {
+                    "Joomla\\Database": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "description": "Joomla Database Package",
+            "homepage": "https://github.com/joomla/joomla-framework-database",
+            "keywords": [
+                "database",
+                "framework",
+                "joomla"
+            ],
+            "time": "2013-08-16 02:58:11"
         },
         {
             "name": "joomla/date",
@@ -452,6 +493,48 @@
             "time": "2013-08-16 02:58:11"
         },
         {
+            "name": "joomla/model",
+            "version": "1.0-beta2",
+            "target-dir": "Joomla/Model",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/joomla/joomla-framework-model.git",
+                "reference": "aa01b0cdeb0973cffbdeb4872bb8567d6c1983b6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/joomla/joomla-framework-model/zipball/aa01b0cdeb0973cffbdeb4872bb8567d6c1983b6",
+                "reference": "aa01b0cdeb0973cffbdeb4872bb8567d6c1983b6",
+                "shasum": ""
+            },
+            "require": {
+                "joomla/database": "1.0-beta2",
+                "joomla/registry": "1.0-beta2",
+                "php": ">=5.3.10"
+            },
+            "require-dev": {
+                "joomla/test": "1.0-beta2"
+            },
+            "type": "joomla-package",
+            "autoload": {
+                "psr-0": {
+                    "Joomla\\Model": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "description": "Joomla Model Package",
+            "homepage": "https://github.com/joomla/joomla-framework-model",
+            "keywords": [
+                "framework",
+                "joomla",
+                "model"
+            ],
+            "time": "2013-08-16 02:58:11"
+        },
+        {
             "name": "joomla/registry",
             "version": "1.0-beta2",
             "target-dir": "Joomla/Registry",
@@ -648,6 +731,68 @@
             "time": "2013-08-16 02:58:11"
         },
         {
+            "name": "monolog/monolog",
+            "version": "1.6.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Seldaek/monolog.git",
+                "reference": "f72392d0e6eb855118f5a84e89ac2d257c704abd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/f72392d0e6eb855118f5a84e89ac2d257c704abd",
+                "reference": "f72392d0e6eb855118f5a84e89ac2d257c704abd",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0",
+                "psr/log": "~1.0"
+            },
+            "require-dev": {
+                "doctrine/couchdb": "dev-master",
+                "mlehner/gelf-php": "1.0.*",
+                "raven/raven": "0.5.*"
+            },
+            "suggest": {
+                "doctrine/couchdb": "Allow sending log messages to a CouchDB server",
+                "ext-amqp": "Allow sending log messages to an AMQP server (1.0+ required)",
+                "ext-mongo": "Allow sending log messages to a MongoDB server",
+                "mlehner/gelf-php": "Allow sending log messages to a GrayLog2 server",
+                "raven/raven": "Allow sending log messages to a Sentry server"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.6.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Monolog": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jordi Boggiano",
+                    "email": "j.boggiano@seld.be",
+                    "homepage": "http://seld.be",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Sends your logs to files, sockets, inboxes, databases and various web services",
+            "homepage": "http://github.com/Seldaek/monolog",
+            "keywords": [
+                "log",
+                "logging",
+                "psr-3"
+            ],
+            "time": "2013-07-28 22:38:30"
+        },
+        {
             "name": "psr/log",
             "version": "1.0.0",
             "source": {
@@ -696,7 +841,8 @@
     "stability-flags": {
         "joomla/application": 10,
         "joomla/di": 10,
-        "joomla/github": 10
+        "joomla/github": 10,
+        "joomla/model": 10
     },
     "platform": [
 
