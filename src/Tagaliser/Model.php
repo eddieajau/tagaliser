@@ -116,7 +116,7 @@ class Model extends AbstractModel implements LoggerAwareInterface
 
 				if (null === $tag)
 				{
-					$tag = (object) array('tag' => 'Unmerged', 'date' => 'To date');
+					$tag = (object) array('tag' => 'Not tagged', 'tagger' => (object) array('date' => 'to date.'));
 				}
 
 				if (!isset($log[$tag->tag]))
