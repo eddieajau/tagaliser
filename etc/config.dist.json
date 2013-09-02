@@ -1,0 +1,11 @@
+{
+	"api" : {
+		"username" : ":username",
+		"password" : ":password",
+		"url" : null,
+	},
+	"github" : {
+		"user" : ":github_user_name",
+		"repo" : ":github_repo",
+	}
+}

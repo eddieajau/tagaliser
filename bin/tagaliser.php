@@ -15,6 +15,8 @@ require realpath(__DIR__ . '/../vendor/autoload.php');
 
 try
 {
+	define('TAGALISER_CONFIG', realpath(__DIR__ . '/../etc/config.json'));
+
 	$app = new Tagaliser\Application;
 	$app->execute();
 }
