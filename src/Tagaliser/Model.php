@@ -127,7 +127,7 @@ class Model extends AbstractModel implements LoggerAwareInterface
 				}
 
 				$log[$tag->tag]['pulls'][] = (object) array(
-					'url' => $pull->url,
+					'url' => $pull->html_url,
 					'number' => $pull->number,
 					'title' => $pull->title,
 					'merged_at' => $pull->merged_at,
