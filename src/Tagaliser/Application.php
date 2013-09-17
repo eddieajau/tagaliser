@@ -135,7 +135,7 @@ class Application extends AbstractCliApplication
 	{
 		foreach ($log as $tag)
 		{
-			$this->out(sprintf('# %s - %s', $tag['tag']->tag, $tag['tag']->date));
+			$this->out(sprintf('## %s - %s', $tag['tag']->tag, $tag['tag']->date));
 
 			foreach ($tag['pulls'] as $pull)
 			{
