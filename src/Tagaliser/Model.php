@@ -17,6 +17,11 @@ use Joomla\Model\AbstractModel;
 /**
  * The Tagaliser model class.
  *
+ * Required state settings:
+ *
+ * * user - The owner/user of the Github repository to scan.
+ * * repo - The name of the Github repository.
+ *
  * @since  1.0
  */
 class Model extends AbstractModel implements LoggerAwareInterface

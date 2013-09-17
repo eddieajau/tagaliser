@@ -116,6 +116,8 @@ class Application extends AbstractCliApplication
 		$this->out('Switches:  -h | --help    Prints this usage information.');
 		$this->out('           --user         The name of the Github user (associated with the repository).');
 		$this->out('           --repo         The name of the Github repository.');
+		$this->out('           --username     Your Github login username.');
+		$this->out('           --password     Your Github login password.');
 		$this->out();
 		$this->out('Examples:  php -f tagaliser.php -h');
 		$this->out('           php -f tagaliser.php -- --user=foo --repo=bar');
