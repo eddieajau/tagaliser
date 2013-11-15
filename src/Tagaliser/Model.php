@@ -27,6 +27,13 @@ use Joomla\Model\AbstractModel;
 class Model extends AbstractModel implements LoggerAwareInterface
 {
 	/**
+	 * The key and label for pull requests that are not tagged.
+	 *
+	 * @since  1.3
+	 */
+	const NOT_TAGGED = 'Not tagged';
+
+	/**
 	 * A Github connector.
 	 *
 	 * @var    Github
@@ -42,6 +49,13 @@ class Model extends AbstractModel implements LoggerAwareInterface
 	 */
 	private $logger;
 
+	/**
+	 * An array of the releases in the repository
+	 *
+	 * @var    array
+	 * @since  1.3
+	 */
+	private $releases;
 	/**
 	 * An array of the tags in the repository
 	 *
@@ -98,6 +112,11 @@ class Model extends AbstractModel implements LoggerAwareInterface
 	 */
 	public function getChangelog()
 	{
+		$rate = $this->github->authorization->getRateLimit()->rate;
+		$this->logger->info(sprintf('Github rate limit %d (%d remaining)', $rate->limit, $rate->remaining));
+
+		$releases = $this->getReleases();
+
 		// Set the maximum number of pages (and runaway failsafe).
 		$cutoff = 100;
 		$page = 1;
@@ -121,17 +140,29 @@ class Model extends AbstractModel implements LoggerAwareInterface
 
 				if (null === $tag)
 				{
-					$tag = (object) array('tag' => 'Not tagged', 'tagger' => (object) array('date' => 'to date.'));
+					$tag = (object) array(
+						'tag' => self::NOT_TAGGED,
+						'tagger' => (object) array(
+							'date' => 'to date.'
+						)
+					);
 				}
 
 				if (!isset($log[$tag->tag]))
 				{
-					$log[$tag->tag] = array();
-					$log[$tag->tag]['tag'] = (object) array('tag' => $tag->tag, 'date' => $tag->tagger->date);
-					$log[$tag->tag]['pulls'] = array();
+					$log[$tag->tag] = new \stdClass;
+					$log[$tag->tag]->tag = (object) array(
+						'tag' => $tag->tag,
+						'date' => $tag->tagger->date,
+						'release_id' => isset($releases[$tag->tag]) ? $releases[$tag->tag]->id : 0,
+						'target_commitish' => isset($releases[$tag->tag]) ? $releases[$tag->tag]->target_commitish : null,
+					);
+
+					$log[$tag->tag]->pulls = array();
+					$log[$tag->tag]->users = array();
 				}
 
-				$log[$tag->tag]['pulls'][] = (object) array(
+				$log[$tag->tag]->pulls[] = (object) array(
 					'url' => $pull->html_url,
 					'number' => $pull->number,
 					'title' => $pull->title,
@@ -139,7 +170,24 @@ class Model extends AbstractModel implements LoggerAwareInterface
 					'user_login' => $pull->user->login,
 					'user_url' => $pull->user->url,
 				);
+
+				if (!isset($log[$tag->tag]->users[$pull->user->login]))
+				{
+					$log[$tag->tag]->users[$pull->user->login] = (object) array(
+						'user_login' => $pull->user->login,
+						'count' => 0,
+					);
+				}
+
+				$log[$tag->tag]->users[$pull->user->login]->count += 1;
 			}
+		}
+
+		// Sort the users nodes.
+		foreach ($log as &$data)
+		{
+			asort($data->users);
+			$data->users = array_values($data->users);
 		}
 
 		return $log;
@@ -158,6 +206,54 @@ class Model extends AbstractModel implements LoggerAwareInterface
     {
 		$this->logger = $logger;
     }
+
+	/**
+	 * Updates the release notes for each tag on the Github site.
+	 *
+	 * @param   array  $log  The changelog data object.
+	 *
+	 * @return  void
+	 *
+	 * @since   1.3
+	 */
+	public function updateReleases($log)
+	{
+		$dryRun = $this->state->get('dry-run');
+		$user = $this->state->get('user');
+		$repo = $this->state->get('repo');
+
+		foreach ($log as $tag => $data)
+		{
+			if ($tag == self::NOT_TAGGED)
+			{
+				$this->logger->debug('Ignoring untagged pull requests.');
+				continue;
+			}
+
+			if ($data->tag->release_id)
+			{
+				$this->logger->debug(sprintf('Updating release for `%s`', $tag));
+
+				if (!$dryRun)
+				{
+					/** @var \Joomla\Github\Package\Releases $releases */
+					$releases = $this->github->releases;
+					$releases->edit($user, $repo, $data->tag->release_id, $tag, '', $tag, $data->notes, false, false);
+				}
+			}
+			else
+			{
+				$this->logger->debug(sprintf('Creating new release for `%s`', $tag));
+
+				if (!$dryRun)
+				{
+					/** @var \Joomla\Github\Package\Releases $releases */
+					$releases = $this->github->releases;
+					$releases->create($user, $repo, $tag, '', $tag, $data->notes, false, false);
+				}
+			}
+		}
+	}
 
 	/**
 	 * Get a page of pull requests from the repository.
@@ -190,6 +286,32 @@ class Model extends AbstractModel implements LoggerAwareInterface
 		$this->logger->info(sprintf('Got %s merged pulls.', count($pulls)));
 
 		return $pulls;
+	}
+
+	/**
+	 * Get a list of the existing releases.
+	 *
+	 * @param   integer  $page  The page number.
+	 *
+	 * @return  array
+	 *
+	 * @since   1.3
+	 */
+	private function getReleases($page = 1)
+	{
+		if (null === $this->releases)
+		{
+			$this->logger->info('Getting releases');
+			$this->logger->info(str_pad('', 40, '-'));
+
+			$user = $this->state->get('user');
+			$repo = $this->state->get('repo');
+
+			$this->releases = $this->github->releases
+				->getList($user, $repo, $page, 100);
+		}
+
+		return $this->releases;
 	}
 
 	/**

@@ -21,6 +21,24 @@ use Monolog\Handler\StreamHandler;
 class LoggerServiceProvider implements ServiceProviderInterface
 {
 	/**
+	 * Gets a Logger object.
+	 *
+	 * @param   Container  $c  A DI container.
+	 *
+	 * @return  Logger
+	 *
+	 * @since   1.3
+	 */
+	public function getLogger(Container $c)
+	{
+		$logger = new Logger('Tagaliser');
+
+		$logger->pushHandler(new StreamHandler('php://stdout'));
+
+		return $logger;
+	}
+
+	/**
 	 * Registers the service provider within a DI container.
 	 *
 	 * @param   Container  $container  The DI container.
@@ -31,13 +49,14 @@ class LoggerServiceProvider implements ServiceProviderInterface
 	 */
 	public function register(Container $container)
 	{
-		$container->share('logger', function(Container $c) {
-
-			$logger = new Logger('Tagaliser');
-
-			$logger->pushHandler(new StreamHandler('php://stdout'));
-
-			return $logger;
-		}, true);
+		$that = $this;
+		$container->share(
+			'logger',
+			function(Container $c) use ($that)
+			{
+				return $that->getLogger($c);
+			},
+			true
+		);
 	}
 }
