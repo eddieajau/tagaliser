@@ -1,0 +1,93 @@
+{"Not tagged": {
+	"tag": {
+		"tag": "Not tagged",
+		"date": "to date.",
+		"release_id": 0,
+		"target_commitish": null
+	},
+	"pulls": [
+		{
+			"url": "https:\/\/github.com\/eddieajau\/tagaliser\/pull\/6",
+			"number": 6,
+			"title": "Update Composer dependencies.",
+			"merged_at": "2013-11-15T03:38:49Z",
+			"user_login": "eddieajau",
+			"user_url": "https:\/\/api.github.com\/users\/eddieajau"
+		}
+	],
+	"users": [
+		{
+			"user_login": "eddieajau",
+			"count": 1
+		}
+	]
+}, "v1.2": {
+	"tag": {
+		"tag": "v1.2",
+		"date": "2013-09-02T04:37:48Z",
+		"release_id": 94344,
+		"target_commitish": "master"
+	},
+	"pulls": [
+		{
+			"url": "https:\/\/github.com\/eddieajau\/tagaliser\/pull\/5",
+			"number": 5,
+			"title": "Add changelog builder.",
+			"merged_at": "2013-09-02T04:27:53Z",
+			"user_login": "eddieajau",
+			"user_url": "https:\/\/api.github.com\/users\/eddieajau"
+		}
+	],
+	"users": [
+		{
+			"user_login": "eddieajau",
+			"count": 1
+		}
+	]
+}, "v1.1": {
+	"tag": {
+		"tag": "v1.1",
+		"date": "2013-08-26T01:44:58Z",
+		"release_id": 94346,
+		"target_commitish": "master"
+	},
+	"pulls": [
+		{
+			"url": "https:\/\/github.com\/eddieajau\/tagaliser\/pull\/2",
+			"number": 2,
+			"title": "Adding Github and DI",
+			"merged_at": "2013-08-26T01:43:48Z",
+			"user_login": "eddieajau",
+			"user_url": "https:\/\/api.github.com\/users\/eddieajau"
+		}
+	],
+	"users": [
+		{
+			"user_login": "eddieajau",
+			"count": 1
+		}
+	]
+}, "v1.0": {
+	"tag": {
+		"tag": "v1.0",
+		"date": "2013-08-23T06:55:41Z",
+		"release_id": 94348,
+		"target_commitish": "master"
+	},
+	"pulls": [
+		{
+			"url": "https:\/\/github.com\/eddieajau\/tagaliser\/pull\/1",
+			"number": 1,
+			"title": "Get the basic application working",
+			"merged_at": "2013-08-23T06:54:03Z",
+			"user_login": "eddieajau",
+			"user_url": "https:\/\/api.github.com\/users\/eddieajau"
+		}
+	],
+	"users": [
+		{
+			"user_login": "eddieajau",
+			"count": 1
+		}
+	]
+}}

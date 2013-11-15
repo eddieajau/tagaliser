@@ -1,6 +1,6 @@
 # Tagaliser
 
-Analyses tags in a Github repository.
+Analyses the pull requests made against tags in a Github repository, and then updates the release notes for the tag.
 
 ## Installation
 
@@ -11,6 +11,8 @@ From the root folder where `composer.json` is located, install the Composer depe
 ```bash
 $ composer install
 ```
+
+Copy the `/etc/config.dist.json` file to `/etc/config.json`.
 
 ## Usage
 
@@ -26,7 +28,12 @@ Switches:  -h | --help    Prints this usage information.
            --repo         The name of the Github repository.
            --username     Your Github login username.
            --password     Your Github login password.
+           --dry-run      Runs the application without adding any data.
 
 Examples:  php -f tagaliser.php -h
            php -f tagaliser.php -- --user=foo --repo=bar
 ```
+
+## Example Results
+
+[https://github.com/eddieajau/tagaliser/releases/tag/v1.2](https://github.com/eddieajau/tagaliser/releases/tag/v1.2)

@@ -5,7 +5,8 @@
     "joomla/di" : "~1.0",
     "joomla/github" : "~1.0",
     "joomla/model" : "~1.0",
-    "monolog/monolog" : "~1"
+    "monolog/monolog" : "~1",
+	"mustache/mustache" : "dev-dev"
   },
   "autoload" : {
     "psr-0" : {

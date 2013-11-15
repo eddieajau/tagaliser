@@ -25,12 +25,12 @@ class Application extends AbstractCliApplication
 	 * @var    string
 	 * @since  1.0
 	 */
-	const VERSION = '1.2.1';
+	const VERSION = '1.3';
 
 	/**
 	 * The application's DI container.
 	 *
-	 * @var    Di\Container
+	 * @var    Container
 	 * @since  1.1
 	 */
 	private $container;
@@ -42,17 +42,48 @@ class Application extends AbstractCliApplication
 	 *
 	 * @since   1.0
 	 */
-	public function doExecute()
+	public function execute()
 	{
 		// Check if help is needed.
 		if ($this->input->get('h') || $this->input->get('help'))
 		{
-			$this->help();
-
-			return;
+			$this->out('Tagaliser ' . self::VERSION);
+			$this->out();
+			$this->out('Usage:     php -f tagaliser.php -- [switches]');
+			$this->out();
+			$this->out('Switches:  -h | --help    Prints this usage information.');
+			$this->out('           --user         The name of the Github user (associated with the repository).');
+			$this->out('           --repo         The name of the Github repository.');
+			$this->out('           --username     Your Github login username.');
+			$this->out('           --password     Your Github login password.');
+			$this->out('           --dry-run      Runs the application without adding any data.');
+			$this->out();
+			$this->out('Examples:  php -f tagaliser.php -h');
+			$this->out('           php -f tagaliser.php -- --user=foo --repo=bar');
+			$this->out();
 		}
+		else
+		{
+			parent::execute();
+		}
+	}
 
+	/**
+	 * Execute the application.
+	 *
+	 * @return  void
+	 *
+	 * @since   1.0
+	 * @throws  \UnexpectedValueException if the Github user and repository name are not provided.
+	 * @throws  \LogicException if a dry-run and the canned data file is not found.
+	 * @throws  \RuntimeException if a dry-run and the canned data cannot be read.
+	 */
+	protected function doExecute()
+	{
+		/** @var Registry $config */
 		$config = $this->container->get('config');
+		$logger = $this->container->get('logger');
+		$dryRun = $this->input->getBool('dry-run');
 		$user = $this->input->get('user', $config->get('github.user'));
 		$repo = $this->input->get('repo', $config->get('github.repo'));
 
@@ -68,9 +99,64 @@ class Application extends AbstractCliApplication
 
 		$model = new Model($this->container->get('github'), $state);
 		$model->setLogger($this->container->get('logger'));
-		$log = $model->getChangelog();
 
-		$this->renderLog($log);
+		if (!$dryRun)
+		{
+			$log = $model->getChangelog();
+		}
+		else
+		{
+			$logger->info('DRY RUN! Using canned data and nothing will be really created or updated.');
+
+			$dryRunFile = $config->get('path.etc') . '/dry-run.json';
+
+			if (!file_exists($dryRunFile))
+			{
+				throw new \LogicException('Dry-run data file does not exist.', 500);
+			}
+
+			$log = json_decode(file_get_contents($dryRunFile));
+
+			if (null === $log)
+			{
+				throw new \RuntimeException('Dry-run data file could not be parsed.', 500);
+			}
+		}
+
+		$this->decorateLog($log);
+		$model->updateReleases($log);
+
+		if ($dryRun)
+		{
+			$logger->info('DRY RUN! Dumping release notes that would have been sent to Github.');
+
+			foreach ($log as $data)
+			{
+				$this->out($data->notes);
+			}
+		}
+	}
+
+	/**
+	 * Renders a changelog array.
+	 *
+	 * @param   array  $log  The changelog details.
+	 *
+	 * @return  void
+	 *
+	 * @since   1.2
+	 */
+	private function decorateLog(&$log)
+	{
+		/** @var \Mustache_Engine $mustache */
+		$mustache = $this->container->get('mustache');
+		$view = $mustache->loadTemplate('release_notes');
+
+		foreach ($log as &$data)
+		{
+			// Note that Mustache does not like looping over associative arrays.
+			$data->notes = $view->render($data);
+		}
 	}
 
 	/**
@@ -93,59 +179,11 @@ class Application extends AbstractCliApplication
 			return $input;
 		}, true);
 
-		$container->registerServiceProvider(new Providers\ConfigServiceProvider);
+		$container->registerServiceProvider(new Providers\ConfigServiceProvider(TAGALISER_CONFIG));
 		$container->registerServiceProvider(new Providers\GithubServiceProvider);
 		$container->registerServiceProvider(new Providers\LoggerServiceProvider);
+		$container->registerServiceProvider(new Providers\MustacheServiceProvider);
 
 		$this->container = $container;
-	}
-
-	/**
-	 * Display the help text.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	private function help()
-	{
-		$this->out('Tagaliser ' . self::VERSION);
-		$this->out();
-		$this->out('Usage:     php -f tagaliser.php -- [switches]');
-		$this->out();
-		$this->out('Switches:  -h | --help    Prints this usage information.');
-		$this->out('           --user         The name of the Github user (associated with the repository).');
-		$this->out('           --repo         The name of the Github repository.');
-		$this->out('           --username     Your Github login username.');
-		$this->out('           --password     Your Github login password.');
-		$this->out();
-		$this->out('Examples:  php -f tagaliser.php -h');
-		$this->out('           php -f tagaliser.php -- --user=foo --repo=bar');
-		$this->out();
-	}
-
-	/**
-	 * Renders a changelog array.
-	 *
-	 * @param   array  $log  The changelog details.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.2
-	 */
-	private function renderLog($log)
-	{
-		foreach ($log as $tag)
-		{
-			$this->out(sprintf('## %s - %s', $tag['tag']->tag, $tag['tag']->date));
-
-			foreach ($tag['pulls'] as $pull)
-			{
-				$this->out();
-				$this->out(sprintf('* [# %d](%s) : %s by [%s](%s) %s', $pull->number, $pull->url, $pull->title, $pull->user_login, $pull->user_url, $pull->merged_at));
-			}
-
-			$this->out();
-		}
 	}
 }
