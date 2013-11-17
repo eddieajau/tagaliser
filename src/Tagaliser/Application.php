@@ -56,10 +56,15 @@ class Application extends AbstractCliApplication
 			$this->out('           --repo         The name of the Github repository.');
 			$this->out('           --username     Your Github login username.');
 			$this->out('           --password     Your Github login password.');
+			$this->out('           --tag          Specifies a single tag to update.');
 			$this->out('           --dry-run      Runs the application without adding any data.');
+			$this->out('                          Use "Not tagged" to get the list of changes for the next tag.');
 			$this->out();
 			$this->out('Examples:  php -f tagaliser.php -h');
 			$this->out('           php -f tagaliser.php -- --user=foo --repo=bar');
+			$this->out('           php -f tagaliser.php -- --tag=v1.0');
+			$this->out('           php -f tagaliser.php -- --tag="Not tagged"');
+			$this->out('           php -f tagaliser.php -- --dry-run');
 			$this->out();
 		}
 		else
@@ -86,6 +91,7 @@ class Application extends AbstractCliApplication
 		$dryRun = $this->input->getBool('dry-run');
 		$user = $this->input->get('user', $config->get('github.user'));
 		$repo = $this->input->get('repo', $config->get('github.repo'));
+		$tag = $this->input->getString('tag');
 
 		if (empty($user) or empty($repo))
 		{
@@ -95,6 +101,7 @@ class Application extends AbstractCliApplication
 		$state = new Registry(array(
 			'user' => $user,
 			'repo' => $repo,
+			'dry-run' => $dryRun,
 		));
 
 		$model = new Model($this->container->get('github'), $state);
@@ -102,11 +109,11 @@ class Application extends AbstractCliApplication
 
 		if (!$dryRun)
 		{
-			$log = $model->getChangelog();
+			$log = $model->getChangelog($tag);
 		}
 		else
 		{
-			$logger->info('DRY RUN! Using canned data and nothing will be really created or updated.');
+			$logger->debug('DRY RUN! Using canned data and nothing will be really created or updated.');
 
 			$dryRunFile = $config->get('path.etc') . '/dry-run.json';
 
@@ -115,11 +122,23 @@ class Application extends AbstractCliApplication
 				throw new \LogicException('Dry-run data file does not exist.', 500);
 			}
 
-			$log = json_decode(file_get_contents($dryRunFile));
+			$log = (array) json_decode(file_get_contents($dryRunFile));
 
 			if (null === $log)
 			{
 				throw new \RuntimeException('Dry-run data file could not be parsed.', 500);
+			}
+
+			if ($tag)
+			{
+				foreach ($log as $k => $data)
+				{
+					if ($k != $tag)
+					{
+						unset($log[$k]);
+						$logger->debug(sprintf('Removed data for tag `%s` (%d).', $k, count($log)));
+					}
+				}
 			}
 		}
 
@@ -128,12 +147,18 @@ class Application extends AbstractCliApplication
 
 		if ($dryRun)
 		{
-			$logger->info('DRY RUN! Dumping release notes that would have been sent to Github.');
+			$logger->debug('Dumping release notes that would have been sent to Github.');
 
-			foreach ($log as $data)
+			foreach ($log as $k => $data)
 			{
+				$logger->debug(sprintf('Release notes for tag `%s`', $k));
 				$this->out($data->notes);
 			}
+		}
+		elseif ($log[Model::NOT_TAGGED])
+		{
+			$logger->info('Dumping release notes for pull requests without a tag.');
+			$this->out($log[Model::NOT_TAGGED]->notes);
 		}
 	}
 
