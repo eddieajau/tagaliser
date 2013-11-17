@@ -105,15 +105,22 @@ class Model extends AbstractModel implements LoggerAwareInterface
 	 *   )
 	 * )
 	 *
+	 * @param   string  $justThisTag  If set, the changelog includes the pull request data for just that tag.
+	 *
 	 * @return  array  An associative array keyed on the tag name.
 	 *                 Each element is an array with the keys 'tag' and 'pulls'.
 	 *
 	 * @since   1.2
 	 */
-	public function getChangelog()
+	public function getChangelog($justThisTag = null)
 	{
 		$rate = $this->github->authorization->getRateLimit()->rate;
 		$this->logger->info(sprintf('Github rate limit %d (%d remaining)', $rate->limit, $rate->remaining));
+
+		if ($justThisTag)
+		{
+			$this->logger->debug(sprintf('Generating log for just the `%s` tag.', $justThisTag));
+		}
 
 		$releases = $this->getReleases();
 
@@ -146,6 +153,11 @@ class Model extends AbstractModel implements LoggerAwareInterface
 							'date' => 'to date.'
 						)
 					);
+				}
+				elseif ($justThisTag && $tag->tag != $justThisTag)
+				{
+					$this->logger->debug(sprintf('Skipping pull request #%d.', $pull->number));
+					continue;
 				}
 
 				if (!isset($log[$tag->tag]))
