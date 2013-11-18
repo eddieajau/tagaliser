@@ -21,14 +21,13 @@
                 <gitcheckout repository="." branchname="master" />
                 <gitpull repository="." all="true" />
                 <phingcall target="replace-tags" />
-                <gitcommit repository="." message="Tagging release v${version}" allFiles="true" />
-                <gittag repository="." name="v${version}" annotate="true" message="v${version}" />
-                <!--<gitpush repository="." all="true" />-->
+                <phingcall target="tag" />
+                <phingcall target="phar" />
             </else>
         </if>
     </target>
 
-    <target name="replace-tags" description="Replaces the `__DEPLOY_VERSION__` markers with a designated tag.">
+    <target name="replace-tags" description="Replaces the `__DEPLOY_VERSION__` markers with a designated tag and commits the changes.">
         <echo>Replacing "__DEPLOY_VERSION__" with "${version}".</echo>
         <reflexive>
             <fileset dir=".">
@@ -41,6 +40,12 @@
                 </replaceregexp>
             </filterchain>
         </reflexive>
+        <gitcommit repository="." message="Tagging release v${version}" allFiles="true" />
+    </target>
+
+    <target name="tag" description="Tags the repository.">
+        <gittag repository="." name="v${version}" annotate="true" message="v${version}" />
+        <!--<gitpush repository="." all="true" />-->
     </target>
 
     <target name="phar" description="Makes the executable phar file.">
