@@ -1,3 +1,4 @@
 .*
+/build/tagaliser.phar
 /etc/config.json
 /vendor

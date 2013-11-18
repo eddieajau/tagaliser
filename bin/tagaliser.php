@@ -11,11 +11,14 @@ error_reporting(-1);
 ini_set('display_errors', 1);
 
 // Bootstrap the Joomla Framework.
-require realpath(__DIR__ . '/../vendor/autoload.php');
+require dirname(__DIR__) . '/vendor/autoload.php';
 
 try
 {
-	define('TAGALISER_CONFIG', realpath(__DIR__ . '/../etc/config.json'));
+	if (!defined('TAGALISER_CONFIG'))
+	{
+		define('TAGALISER_CONFIG', dirname(__DIR__) . '/etc/config.json');
+	}
 
 	$app = new Tagaliser\Application;
 	$app->execute();
