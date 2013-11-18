@@ -25,7 +25,7 @@ class Application extends AbstractCliApplication
 	 * @var    string
 	 * @since  1.0
 	 */
-	const VERSION = '1.3';
+	const VERSION = '__DEPLOY_VERSION__';
 
 	/**
 	 * The application's DI container.
@@ -59,12 +59,14 @@ class Application extends AbstractCliApplication
 			$this->out('           --tag          Specifies a single tag to update.');
 			$this->out('           --dry-run      Runs the application without adding any data.');
 			$this->out('                          Use "Not tagged" to get the list of changes for the next tag.');
+			$this->out('           --profile      Use a connection profile from the configuration file.');
 			$this->out();
 			$this->out('Examples:  php -f tagaliser.php -h');
 			$this->out('           php -f tagaliser.php -- --user=foo --repo=bar');
 			$this->out('           php -f tagaliser.php -- --tag=v1.0');
 			$this->out('           php -f tagaliser.php -- --tag="Not tagged"');
 			$this->out('           php -f tagaliser.php -- --dry-run');
+			$this->out('           php -f tagaliser.php -- --profile=work');
 			$this->out();
 		}
 		else
@@ -87,7 +89,13 @@ class Application extends AbstractCliApplication
 	{
 		/** @var Registry $config */
 		$config = $this->container->get('config');
+
+		/** @var \Psr\Log\LoggerInterface $logger */
 		$logger = $this->container->get('logger');
+
+		/** @var \Joomla\Github\Github $github */
+		$github = $this->container->get('github');
+
 		$dryRun = $this->input->getBool('dry-run');
 		$user = $this->input->get('user', $config->get('github.user'));
 		$repo = $this->input->get('repo', $config->get('github.repo'));
@@ -95,7 +103,27 @@ class Application extends AbstractCliApplication
 
 		if (empty($user) or empty($repo))
 		{
-			throw new \UnexpectedValueException('A Github user and repository must be provided via the command line or application configuration.');
+			throw new \UnexpectedValueException(
+				'A Github user and repository must be provided via the command line or a configuration profile.'
+			);
+		}
+
+		// Workaround for bug where there is no rate limit.
+		try
+		{
+			$logger->info(sprintf('Github user="%s", repository="%s")', $user, $repo));
+			$rate = $github->authorization->getRateLimit()->rate;
+			$logger->info(sprintf('Github rate limit %d (%d remaining)', $rate->limit, $rate->remaining));
+		}
+		catch (\Exception $e)
+		{
+			// Check if the exception is that rate limiting was not found.
+			if ($e->getCode() != 404)
+			{
+				throw $e;
+			}
+
+			$logger->info(sprintf('Github rate limit *unlimited*.'));
 		}
 
 		$state = new Registry(array(

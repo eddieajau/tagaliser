@@ -21,7 +21,7 @@ class ConfigServiceProvider implements ServiceProviderInterface
 {
 	/**
 	 * @var    string
-	 * @since  1.3
+	 * @since  __DEPLOY_VERSION__
 	 */
 	private $path;
 
@@ -30,7 +30,7 @@ class ConfigServiceProvider implements ServiceProviderInterface
 	 *
 	 * @param   string  $path  The full path and file name for the configuration file.
 	 *
-	 * @since   1.3
+	 * @since   __DEPLOY_VERSION__
 	 */
 	public function __construct($path)
 	{
@@ -44,7 +44,7 @@ class ConfigServiceProvider implements ServiceProviderInterface
 	 *
 	 * @return  Registry
 	 *
-	 * @since   1.3
+	 * @since   __DEPLOY_VERSION__
 	 * @throws  \LogicException if the configuration file does not exist.
 	 * @throws  \UnexpectedValueException if the configuration file could not be parsed.
 	 */
@@ -55,6 +55,9 @@ class ConfigServiceProvider implements ServiceProviderInterface
 			throw new \LogicException('Configuration file does not exist.', 500);
 		}
 
+		/** @var \Joomla\Input\Input $input */
+		$input = $c->get('input');
+
 		$json = json_decode(file_get_contents($this->path));
 
 		if (null === $json)
@@ -62,7 +65,17 @@ class ConfigServiceProvider implements ServiceProviderInterface
 			throw new \UnexpectedValueException('Configuration file could not be parsed.', 500);
 		}
 
-		$config = new Registry($json);
+		$temp = new Registry($json);
+		$profile = $input->get('profile');
+
+		if ($temp->get('profiles.' . $profile))
+		{
+			$config = new Registry($temp->get('profiles.' . $profile));
+		}
+		else
+		{
+			$config = new Registry($temp->get('profiles.default'));
+		}
 
 		// Automatically set the path for `/etc/`.
 		$config->set('path.etc', dirname($this->path));
