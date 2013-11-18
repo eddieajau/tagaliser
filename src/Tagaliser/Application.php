@@ -183,7 +183,7 @@ class Application extends AbstractCliApplication
 				$this->out($data->notes);
 			}
 		}
-		elseif ($log[Model::NOT_TAGGED])
+		elseif (isset($log[Model::NOT_TAGGED]))
 		{
 			$logger->info('Dumping release notes for pull requests without a tag.');
 			$this->out($log[Model::NOT_TAGGED]->notes);
