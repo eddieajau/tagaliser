@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="Make Tagliser" default="help">
+
+    <target name="help">
+        <echo>Use `$ phing -l` to list the available targets.</echo>
+    </target>
+
+    <target name="build-release" description="Tag the repository. Use with `-Dtag=:tag_name`">
+        <if>
+            <not>
+                <isset property="tag" />
+            </not>
+            <then>
+                <echo>Please use the `-Dtag=1.0` option to set the tag.</echo>
+            </then>
+            <else>
+                <gitcheckout repository="." branchname="master" />
+                <gitpull repository="." all="true" />
+                <phingcall target="replace-tags" />
+                <gitcommit repository="." message="Tagging release v${tag}" allFiles="true" />
+                <gittag repository="." name="v${tag}" annotate="true" message="v${tag}" />
+                <!--<gitpush repository="." all="true" />-->
+            </else>
+        </if>
+    </target>
+
+    <target name="replace-tags" description="Replaces the `__DEPLOY_VERSION__` markers with a designated tag.">
+        <echo>Replacing "__DEPLOY_VERSION__" with "${tag}".</echo>
+        <reflexive>
+            <fileset dir=".">
+                <include pattern="*.md" />
+                <include pattern="src/**/*.php" />
+            </fileset>
+            <filterchain>
+                <replaceregexp>
+                    <regexp pattern="__DEPLOY_VERSION__" replace="${tag}"/>
+                </replaceregexp>
+            </filterchain>
+        </reflexive>
+    </target>
+</project>
