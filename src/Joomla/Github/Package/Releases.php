@@ -15,7 +15,7 @@ use Joomla\Github\Package;
  *
  * @documentation http://developer.github.com/v3/repos/releases
  *
- * @since  1.3
+ * @since  __DEPLOY_VERSION__
  */
 class Releases extends Package
 {
@@ -37,7 +37,7 @@ class Releases extends Package
 	 * @return  object
 	 *
 	 * @link    http://developer.github.com/v3/repos/releases/#create-a-release
-	 * @since   1.3
+	 * @since   __DEPLOY_VERSION__
 	 * @throws  \DomainException
 	 */
 	public function create($user, $repo, $tagName, $targetCommitish = '', $name = '', $body = '', $draft = false, $preRelease = false)
@@ -90,7 +90,7 @@ class Releases extends Package
 	 * @return  object
 	 *
 	 * @link    http://developer.github.com/v3/repos/releases/#edit-a-release
-	 * @since   1.3
+	 * @since   __DEPLOY_VERSION__
 	 * @throws  \DomainException
 	 */
 	public function edit($user, $repo, $releaseId, $tagName,
@@ -155,7 +155,7 @@ class Releases extends Package
 	 *
 	 * @return  object
 	 *
-	 * @since   1.3
+	 * @since   __DEPLOY_VERSION__
 	 * @throws  \DomainException
 	 */
 	public function get($user, $repo, $ref)
@@ -187,7 +187,7 @@ class Releases extends Package
 	 *
 	 * @return  array  An associative array of releases keyed by the tag name.
 	 *
-	 * @since   1.3
+	 * @since   __DEPLOY_VERSION__
 	 * @throws  \DomainException
 	 */
 	public function getList($user, $repo, $page = 0, $limit = 0)
