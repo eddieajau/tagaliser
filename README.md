@@ -41,6 +41,17 @@ Examples:  php -f tagaliser.php -h
            php -f tagaliser.php -- --profile=work
 ```
 
+## Using the phar executable
+
+To make the phar file:
+
+```bash
+$ phing phar
+```
+
+This will create `/build/tagaliser.phar`. The phar file expects to find a configuration file called `tagaliser.json`
+in the same folder.
+
 ## Example Results
 
 [https://github.com/eddieajau/tagaliser/releases/tag/v1.2](https://github.com/eddieajau/tagaliser/releases/tag/v1.2)

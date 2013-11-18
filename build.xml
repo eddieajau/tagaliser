@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="Make Tagliser" default="help">
+
+<project name="Make Tagliser" default="help" basedir=".">
+
+    <property name="targetdir" value="." override="true" />
 
     <target name="help">
         <echo>Use `$ phing -l` to list the available targets.</echo>
@@ -38,5 +41,29 @@
                 </replaceregexp>
             </filterchain>
         </reflexive>
+    </target>
+
+    <target name="phar" description="Makes the executable phar file.">
+        <echo>Making tagaliser.phar".</echo>
+        <delete file="./build/tagaliser.phar" />
+        <pharpackage
+            destfile="./build/tagaliser.phar"
+            basedir="${targetdir}"
+            compression="gzip"
+            stub="./build/stub.php"
+            signature="sha1">
+            <fileset dir=".">
+                <include name="bin/tagaliser.php" />
+                <include name="src/**" />
+                <include name="vendor/**" />
+            </fileset>
+            <metadata>
+                <element name="version" value="2.0" />
+                <element name="authors">
+                    <element name="Andrew Eddie" />
+                </element>
+            </metadata>
+        </pharpackage>
+        <chmod file="./build/tagaliser.phar" mode="744" />
     </target>
 </project>
