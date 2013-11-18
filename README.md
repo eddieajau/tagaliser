@@ -12,14 +12,14 @@ From the root folder where `composer.json` is located, install the Composer depe
 $ composer install
 ```
 
-Copy the `/etc/config.dist.json` file to `/etc/config.json`.
+Copy the `/etc/config.dist.json` file to `/etc/config.json`. Update the default profile as required and/or add new profiles.
 
 ## Usage
 
 ```bash
 $ php -f bin/tagaliser.php -- --help
 
-Tagaliser 1.2
+Tagaliser __DEPLOY_VERSION__
 
 Usage:     php -f tagaliser.php -- [switches]
 
@@ -28,10 +28,17 @@ Switches:  -h | --help    Prints this usage information.
            --repo         The name of the Github repository.
            --username     Your Github login username.
            --password     Your Github login password.
+           --tag          Specifies a single tag to update.
            --dry-run      Runs the application without adding any data.
+                          Use "Not tagged" to get the list of changes for the next tag.
+           --profile      Use a connection profile from the configuration file.
 
 Examples:  php -f tagaliser.php -h
            php -f tagaliser.php -- --user=foo --repo=bar
+           php -f tagaliser.php -- --tag=v1.0
+           php -f tagaliser.php -- --tag="Not tagged"
+           php -f tagaliser.php -- --dry-run
+           php -f tagaliser.php -- --profile=work
 ```
 
 ## Example Results

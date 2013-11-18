@@ -14,7 +14,7 @@ use Joomla\DI\ServiceProviderInterface;
 /**
  * Registers the Mustache service provider.
  *
- * @since  1.3
+ * @since  __DEPLOY_VERSION__
  */
 class MustacheServiceProvider implements ServiceProviderInterface
 {
@@ -25,7 +25,7 @@ class MustacheServiceProvider implements ServiceProviderInterface
 	 *
 	 * @return  \Mustache_Engine
 	 *
-	 * @since   1.3
+	 * @since   __DEPLOY_VERSION__
 	 */
 	public function getMustache(Container $c)
 	{
@@ -60,7 +60,7 @@ class MustacheServiceProvider implements ServiceProviderInterface
 	 *
 	 * @return  void
 	 *
-	 * @since   1.3
+	 * @since   __DEPLOY_VERSION__
 	 */
 	public function register(Container $container)
 	{

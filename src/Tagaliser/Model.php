@@ -29,7 +29,7 @@ class Model extends AbstractModel implements LoggerAwareInterface
 	/**
 	 * The key and label for pull requests that are not tagged.
 	 *
-	 * @since  1.3
+	 * @since  __DEPLOY_VERSION__
 	 */
 	const NOT_TAGGED = 'Not tagged';
 
@@ -53,7 +53,7 @@ class Model extends AbstractModel implements LoggerAwareInterface
 	 * An array of the releases in the repository
 	 *
 	 * @var    array
-	 * @since  1.3
+	 * @since  __DEPLOY_VERSION__
 	 */
 	private $releases;
 	/**
@@ -114,9 +114,6 @@ class Model extends AbstractModel implements LoggerAwareInterface
 	 */
 	public function getChangelog($justThisTag = null)
 	{
-		$rate = $this->github->authorization->getRateLimit()->rate;
-		$this->logger->info(sprintf('Github rate limit %d (%d remaining)', $rate->limit, $rate->remaining));
-
 		if ($justThisTag)
 		{
 			$this->logger->debug(sprintf('Generating log for just the `%s` tag.', $justThisTag));
@@ -226,7 +223,7 @@ class Model extends AbstractModel implements LoggerAwareInterface
 	 *
 	 * @return  void
 	 *
-	 * @since   1.3
+	 * @since   __DEPLOY_VERSION__
 	 */
 	public function updateReleases($log)
 	{
@@ -279,7 +276,6 @@ class Model extends AbstractModel implements LoggerAwareInterface
 	private function getPulls($page)
 	{
 		$this->logger->info(sprintf('Getting pulls page #%02d.', $page));
-		$this->logger->info(str_pad('', 40, '-'));
 
 		$user = $this->state->get('user');
 		$repo = $this->state->get('repo');
@@ -307,14 +303,13 @@ class Model extends AbstractModel implements LoggerAwareInterface
 	 *
 	 * @return  array
 	 *
-	 * @since   1.3
+	 * @since   __DEPLOY_VERSION__
 	 */
 	private function getReleases($page = 1)
 	{
 		if (null === $this->releases)
 		{
 			$this->logger->info('Getting releases');
-			$this->logger->info(str_pad('', 40, '-'));
 
 			$user = $this->state->get('user');
 			$repo = $this->state->get('repo');
@@ -364,7 +359,6 @@ class Model extends AbstractModel implements LoggerAwareInterface
 	private function getTags($page)
 	{
 		$this->logger->info(sprintf('Getting tags page #%02d.', $page));
-		$this->logger->info(str_pad('', 40, '-'));
 
 		$user = $this->state->get('user');
 		$repo = $this->state->get('repo');
