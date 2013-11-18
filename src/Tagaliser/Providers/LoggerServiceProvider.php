@@ -27,7 +27,7 @@ class LoggerServiceProvider implements ServiceProviderInterface
 	 *
 	 * @return  Logger
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   2.0
 	 */
 	public function getLogger(Container $c)
 	{

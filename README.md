@@ -19,7 +19,7 @@ Copy the `/etc/config.dist.json` file to `/etc/config.json`. Update the default 
 ```bash
 $ php -f bin/tagaliser.php -- --help
 
-Tagaliser __DEPLOY_VERSION__
+Tagaliser 2.0
 
 Usage:     php -f tagaliser.php -- [switches]
 

@@ -27,7 +27,7 @@ class GithubServiceProvider implements ServiceProviderInterface
 	 *
 	 * @return  Github
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   2.0
 	 */
 	public function getGithub(Container $c)
 	{

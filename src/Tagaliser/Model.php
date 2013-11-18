@@ -29,7 +29,7 @@ class Model extends AbstractModel implements LoggerAwareInterface
 	/**
 	 * The key and label for pull requests that are not tagged.
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  2.0
 	 */
 	const NOT_TAGGED = 'Not tagged';
 
@@ -53,7 +53,7 @@ class Model extends AbstractModel implements LoggerAwareInterface
 	 * An array of the releases in the repository
 	 *
 	 * @var    array
-	 * @since  __DEPLOY_VERSION__
+	 * @since  2.0
 	 */
 	private $releases;
 	/**
@@ -223,7 +223,7 @@ class Model extends AbstractModel implements LoggerAwareInterface
 	 *
 	 * @return  void
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   2.0
 	 */
 	public function updateReleases($log)
 	{
@@ -303,7 +303,7 @@ class Model extends AbstractModel implements LoggerAwareInterface
 	 *
 	 * @return  array
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   2.0
 	 */
 	private function getReleases($page = 1)
 	{

@@ -21,7 +21,7 @@ class ConfigServiceProvider implements ServiceProviderInterface
 {
 	/**
 	 * @var    string
-	 * @since  __DEPLOY_VERSION__
+	 * @since  2.0
 	 */
 	private $path;
 
@@ -30,7 +30,7 @@ class ConfigServiceProvider implements ServiceProviderInterface
 	 *
 	 * @param   string  $path  The full path and file name for the configuration file.
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   2.0
 	 */
 	public function __construct($path)
 	{
@@ -44,7 +44,7 @@ class ConfigServiceProvider implements ServiceProviderInterface
 	 *
 	 * @return  Registry
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   2.0
 	 * @throws  \LogicException if the configuration file does not exist.
 	 * @throws  \UnexpectedValueException if the configuration file could not be parsed.
 	 */

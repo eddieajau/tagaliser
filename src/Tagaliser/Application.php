@@ -25,7 +25,7 @@ class Application extends AbstractCliApplication
 	 * @var    string
 	 * @since  1.0
 	 */
-	const VERSION = '__DEPLOY_VERSION__';
+	const VERSION = '2.0';
 
 	/**
 	 * The application's DI container.
